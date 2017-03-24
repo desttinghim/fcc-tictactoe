@@ -11,6 +11,11 @@ import mint.render.luxe.Label;
 import mint.layout.margins.Margins;
 import luxe.utils.Maths;
 
+@:enum abstract Piece(String) to String{
+    var X = "X";
+    var O = "O";
+    var E = "E";
+}
 
 class Board extends State {
 
@@ -19,16 +24,26 @@ class Board extends State {
     var canvas : mint.Canvas;
     var buttons : Array<mint.Button>;
 
+    var places : Array<Piece>;
+    var currentPiece : Piece;
+    var playerPiece : Piece;
+
     override function onleave<T>(_:T) {
 
         bg.destroy();
 
         grid = null;
+        buttons = null;
 
     } //onleave
 
     override function onenter<T>(_:T) {
 
+        // game code
+        places = [for(i in 0...9) E];
+        currentPiece = X;
+
+        // rendering code
         canvas = Main.canvas;
 
         bg = new luxe.Sprite({
@@ -54,14 +69,29 @@ class Board extends State {
                 new mint.Button({
                     parent: canvas,
                     name: 'button$i$a',
-                    x: i * 160, y: a * 160, w: 160, h: 160,
+                    x: a * 160 + 16, y: i * 160 + 16 + 80, w: 128, h: 128,
                     text: '',
-                    onclick: function(e, c) {trace('button $i, $a');},
+                    options: {
+                        color: new Color().rgb(0xffffff),
+                        color_hover: new Color().rgb(0xf0f0f0),
+                        color_down: new Color().rgb(0xaaaaaa),
+                        label: { color: new Color().rgb(0x000000), },
+                    },
+                    onclick: function(e, c) {take(a,i);},
                 });
             }
         }
         ];
 
     } //onenter
+
+    function take(x,y) {
+        var i = (y * 3) + (x % 3);
+        if (places[i] == E) {
+            places[i] = currentPiece;
+            buttons[i].label.text = currentPiece;
+            currentPiece = currentPiece == X ? O : X;
+        }
+    }
 
 }

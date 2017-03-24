@@ -60,7 +60,7 @@ class Main extends luxe.Game {
         state.add( new Menu({ name: 'state0' }) );
         state.add( new Board({ name: 'state1' }) );
 
-        state.set('state0');
+        state.set('state1');
 
     } //ready
 
