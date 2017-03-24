@@ -20,6 +20,7 @@ class Main extends luxe.Game {
     public static var rendering: LuxeMintRender;
 
     public static var state : States;
+    public static var piece : Piece;
 
     var back : Sprite;
     var grid : Sprite;
@@ -56,11 +57,12 @@ class Main extends luxe.Game {
         canvas.auto_listen();
 
         state = new States();
+        piece = X;
 
         state.add( new Menu({ name: 'state0' }) );
         state.add( new Board({ name: 'state1' }) );
 
-        state.set('state1');
+        state.set('state0');
 
     } //ready
 

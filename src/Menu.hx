@@ -11,18 +11,21 @@ import mint.render.luxe.Label;
 import mint.layout.margins.Margins;
 import luxe.utils.Maths;
 
+import Piece;
 
 class Menu extends State {
 
     var bg : luxe.Sprite;
-    var playbtn : mint.Button;
+    var xbtn : mint.Button;
+    var obtn : mint.Button;
     var canvas : mint.Canvas;
 
     override function onleave<T>(_:T) {
 
         bg.destroy();
 
-        playbtn = null;
+        xbtn = null;
+        obtn = null;
 
     } //onleave
 
@@ -36,14 +39,24 @@ class Menu extends State {
             size: new Vector(Luxe.screen.size.x, Luxe.screen.size.y),
         });
 
-        playbtn = new mint.Button({
+        xbtn = new mint.Button({
             parent: canvas,
             name: 'button',
-            x: 90, y: 40, w: 60, h: 32,
-            text: 'mint',
-            text_size: 14,
+            x: Luxe.screen.mid.x-160, y: Luxe.screen.mid.y-160, w: 128, h: 128,
+            text: 'crosses',
+            text_size: 24,
             options: { label: { color: new Color().rgb(0x9dca63) }},
-            onclick: function (e,c) { Main.changeState('state1'); }
+            onclick: function (e,c) { Main.piece = X; Main.changeState('state1'); }
+        });
+
+        obtn = new mint.Button({
+            parent: canvas,
+            name: 'button',
+            x: Luxe.screen.mid.x+32, y: Luxe.screen.mid.y-160, w: 128, h: 128,
+            text: 'knots',
+            text_size: 24,
+            options: { label: { color: new Color().rgb(0x9dca63) }},
+            onclick: function (e,c) { Main.piece = O; Main.changeState('state1'); }
         });
 
     }

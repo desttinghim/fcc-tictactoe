@@ -11,11 +11,7 @@ import mint.render.luxe.Label;
 import mint.layout.margins.Margins;
 import luxe.utils.Maths;
 
-@:enum abstract Piece(String) to String{
-    var X = "cross";
-    var O = "knot";
-    var E = "empty";
-}
+import Piece;
 
 class Board extends State {
 
@@ -45,7 +41,7 @@ class Board extends State {
 
         // game code
         places = [for(i in 0...9) E];
-        currentPiece = X;
+        currentPiece = Main.piece;
 
         // rendering code
         canvas = Main.canvas;
@@ -91,13 +87,31 @@ class Board extends State {
 
     function take(x,y) {
         var i = (y * 3) + (x % 3);
+        takeIndex(i);
+    } //take
+
+    function takeIndex(i) {
         if (places[i] == E) {
             places[i] = currentPiece;
             buttons[i].label.text = currentPiece;
-            checkBoard();
             currentPiece = currentPiece == X ? O : X;
         }
-    } //take
+        var win = checkBoard();
+        if (win != E) {
+            trace('$win won');
+            Main.changeState('state1');
+            return;
+        } else if (currentPiece != Main.piece) computerTurn();
+    }
+
+    function computerTurn() {
+        if(places.indexOf(E) == -1) return; //TODO: tie handling
+        var openSpots = [];
+        for (i in 0...places.length) {
+            if (places[i] == E) openSpots.push(i);
+        }
+        takeIndex(openSpots[Math.floor(Math.random()*openSpots.length)]);
+    }
 
     public static var wins = [
     [
@@ -142,7 +156,7 @@ class Board extends State {
     ],
     ];
 
-    function checkBoard() {
+    function checkBoard():Piece {
 
         var stateOfX:Array<Bool> = places.map(function (item) {
             return item == X;
@@ -165,15 +179,7 @@ class Board extends State {
             if(reduceX) {win = X; break;}
         }
 
-        if (win == X) {
-            trace('x wins');
-            Main.changeState('state1');
-        } else if (win == O) {
-            trace('o wins');
-            Main.changeState('state1');
-        } else {
-            trace('no win');
-        }
+        return win;
 
     } //checkBoard
 
