@@ -17,6 +17,7 @@ class Board extends State {
     var bg : luxe.Sprite;
     var grid : luxe.Sprite;
     var canvas : mint.Canvas;
+    var buttons : Array<mint.Button>;
 
     override function onleave<T>(_:T) {
 
@@ -47,68 +48,20 @@ class Board extends State {
             size: new Vector(480, 480),
         });
 
-    }
-
-    static var box1 = {
-        a: {x: 0.0, y: 0.0},
-        b: {x: 1.0/3, y: 1.0/3},
-    };
-
-    static var box2 = {
-        a: {x: 1.0/3, y: 0.0},
-        b: {x: 2.0/3, y: 1.0/3},
-    };
-
-    static var box3 = {
-        a: {x: 2.0/3, y: 0.0},
-        b: {x: 3.0, y: 1.0/3},
-    };
-
-    static var box4 = {
-        a: {x: 0.0, y: 1.0/3},
-        b: {x: 1.0/3, y: 2.0/3},
-    };
-
-    static var box5 = {
-        a: {x: 1.0/3, y: 1.0/3},
-        b: {x: 2.0/3, y: 2.0/3},
-    };
-
-    static var box6 = {
-        a: {x: 2.0/3, y: 1.0/3},
-        b: {x: 3.0, y: 2.0/3},
-    };
-
-    static var box7 = {
-        a: {x: 0.0, y: 3.0},
-        b: {x: 1.0/3, y: 2.0/3},
-    };
-
-    static var box8 = {
-        a: {x: 1.0/3, y: 3.0},
-        b: {x: 2.0/3, y: 2.0/3}
-    };
-
-    static var box9 = {
-        a: {x: 2.0/3, y: 3.0},
-        b: {x: 3.0, y: 2.0/3}
-    };
-
-    override function onmouseup(e:luxe.MouseEvent) {
-
-        function checkAABB(box:{a:{x:Float,y:Float},b:{x:Float,y:Float}}, pos) {
-            if (pos.x > box.a.x && pos.x < box.b.x && pos.y > box.a.y && pos.y < box.b.y) {
-                return true;
+        buttons = [
+        for (i in 0...3) {
+            for (a in 0...3) {
+                new mint.Button({
+                    parent: canvas,
+                    name: 'button$i$a',
+                    x: i * 160, y: a * 160, w: 160, h: 160,
+                    text: '',
+                    onclick: function(e, c) {trace('button $i, $a');},
+                });
             }
-            return false;
         }
+        ];
 
-        if (grid.point_inside_AABB(e.pos)) {
-            var pos = e.pos.subtract(grid.pos).divideScalar(480);
-
-            if (checkAABB(box1, pos)) {trace('square 1');}
-        }
-
-    }
+    } //onenter
 
 }
