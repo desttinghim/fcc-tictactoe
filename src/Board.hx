@@ -19,8 +19,9 @@ class Board extends State {
     var grid : luxe.Sprite;
     var canvas : mint.Canvas;
     var buttons : Array<mint.Button>;
+    var images : Array<mint.Image>;
 
-    var places : Array<Piece>;
+    var place : Array<Piece>;
     var currentPiece : Piece;
     var playerPiece : Piece;
 
@@ -31,7 +32,8 @@ class Board extends State {
 
         grid = null;
         buttons = null;
-        places = null;
+        images = null;
+        place = null;
         currentPiece = null;
         playerPiece = null;
 
@@ -40,7 +42,7 @@ class Board extends State {
     override function onenter<T>(_:T) {
 
         // game code
-        places = [for(i in 0...9) E];
+        place = [for(i in 0...9) E];
         currentPiece = Main.piece;
 
         // rendering code
@@ -83,6 +85,8 @@ class Board extends State {
         }
         ];
 
+        images = [];
+
     } //onenter
 
     function take(x,y) {
@@ -91,9 +95,14 @@ class Board extends State {
     } //take
 
     function takeIndex(i) {
-        if (places[i] == E) {
-            places[i] = currentPiece;
-            buttons[i].label.text = currentPiece;
+        if (place[i] == E) {
+            place[i] = currentPiece;
+            // buttons[i].label.text = currentPiece;
+            images.push(new mint.Image({
+                parent: canvas,
+                x: buttons[i].x, y: buttons[i].y , w: 128, h: 128,
+                path: 'assets/$currentPiece.png'
+            }));
             currentPiece = currentPiece == X ? O : X;
         }
         var win = checkBoard();
@@ -102,16 +111,43 @@ class Board extends State {
             Main.changeState('state1');
             return;
         } else if (currentPiece != Main.piece) computerTurn();
-    }
+    } //takeIndex
 
     function computerTurn() {
-        if(places.indexOf(E) == -1) return; //TODO: tie handling
+        if(place.indexOf(E) == -1) return; //TODO: tie handling
         var openSpots = [];
-        for (i in 0...places.length) {
-            if (places[i] == E) openSpots.push(i);
+        for (i in 0...place.length) {
+            if (place[i] == E) openSpots.push(i);
         }
         takeIndex(openSpots[Math.floor(Math.random()*openSpots.length)]);
-    }
+    } //computerTurn
+
+    function checkBoard():Piece {
+
+        var stateOfX:Array<Bool> = place.map(function (item) {
+            return item == X;
+        });
+
+        var stateOfO:Array<Bool> = place.map(function (item) {
+            return item == O;
+        });
+
+        var win = E;
+
+        for (arr in wins) {
+            var reduceO = true;
+            var reduceX = true;
+            for (i in 0...arr.length) {
+                if(!stateOfO[i] && arr[i] && reduceO) {reduceO = false;}
+                if(!stateOfX[i] && arr[i] && reduceX) {reduceX = false;}
+            }
+            if(reduceO) {win = O; break;}
+            if(reduceX) {win = X; break;}
+        }
+
+        return win;
+
+    } //checkBoard
 
     public static var wins = [
     [
@@ -155,32 +191,5 @@ class Board extends State {
     true, false, false,
     ],
     ];
-
-    function checkBoard():Piece {
-
-        var stateOfX:Array<Bool> = places.map(function (item) {
-            return item == X;
-        });
-
-        var stateOfO:Array<Bool> = places.map(function (item) {
-            return item == O;
-        });
-
-        var win = E;
-
-        for (arr in wins) {
-            var reduceO = true;
-            var reduceX = true;
-            for (i in 0...arr.length) {
-                if(!stateOfO[i] && arr[i] && reduceO) {reduceO = false;}
-                if(!stateOfX[i] && arr[i] && reduceX) {reduceX = false;}
-            }
-            if(reduceO) {win = O; break;}
-            if(reduceX) {win = X; break;}
-        }
-
-        return win;
-
-    } //checkBoard
 
 }
