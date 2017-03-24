@@ -12,20 +12,21 @@
       //for save locations, initializing mobile project files etc
     app : {
       name : 'luxe_empty',
-      package : 'name.desttinghim.fcc-tictactoe'
+      package : 'name.desttinghim.fcc-tictactoe',
     },
 
       //This configures the build process
     build : {
       dependencies : {
-        luxe : '*'
+        luxe : '*',
+        mint : '*',
       }
     },
 
       //Copies over all the assets to the output
     files : {
       assets : 'assets/',
-      index : { path:'custom_index.html => index.html', template:'project' }
+      index : { path:'custom_index.html => index.html', template:'project' },
     }
 
   } //project
