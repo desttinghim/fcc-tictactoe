@@ -3,16 +3,16 @@
   project : {
 
       //These first two are required
-    name : 'empty',
+    name : 'tic-tac-toe',
     version : '1.0.0',
-    author : 'luxeengine',
+    author : 'desttinghim',
 
       //This configures your app.
-      //The package is important, it's used 
+      //The package is important, it's used
       //for save locations, initializing mobile project files etc
     app : {
       name : 'luxe_empty',
-      package : 'com.luxeengine.empty'
+      package : 'name.desttinghim.fcc-tictactoe'
     },
 
       //This configures the build process
@@ -24,10 +24,10 @@
 
       //Copies over all the assets to the output
     files : {
-      assets : 'assets/'
+      assets : 'assets/',
+      index : { path:'custom_index.html => index.html', template:'project' }
     }
 
   } //project
 
 }
-
