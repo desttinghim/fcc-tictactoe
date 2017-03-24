@@ -12,9 +12,9 @@ import mint.layout.margins.Margins;
 import luxe.utils.Maths;
 
 @:enum abstract Piece(String) to String{
-    var X = "X";
-    var O = "O";
-    var E = "E";
+    var X = "cross";
+    var O = "knot";
+    var E = "empty";
 }
 
 class Board extends State {
@@ -31,9 +31,13 @@ class Board extends State {
     override function onleave<T>(_:T) {
 
         bg.destroy();
+        grid.destroy();
 
         grid = null;
         buttons = null;
+        places = null;
+        currentPiece = null;
+        playerPiece = null;
 
     } //onleave
 
@@ -68,7 +72,7 @@ class Board extends State {
             for (a in 0...3) {
                 new mint.Button({
                     parent: canvas,
-                    name: 'button$i$a',
+                    name: 'button$a$i',
                     x: a * 160 + 16, y: i * 160 + 16 + 80, w: 128, h: 128,
                     text: '',
                     options: {
@@ -90,8 +94,72 @@ class Board extends State {
         if (places[i] == E) {
             places[i] = currentPiece;
             buttons[i].label.text = currentPiece;
+            checkBoard();
             currentPiece = currentPiece == X ? O : X;
         }
-    }
+    } //take
+
+    public static var wins = [
+    [
+    true, true, true,
+    false, false, false,
+    false, false, false,
+    ],
+    [
+    false, false, false,
+    true, true, true,
+    false, false, false,
+    ],
+    [
+    false, false, false,
+    false, false, false,
+    true, true, true,
+    ],
+    [
+    true, false, false,
+    false, true, false,
+    false, false, true,
+    ],
+    [
+    false, false, true,
+    false, true, false,
+    true, false, false,
+    ],
+    ];
+
+    function checkBoard() {
+
+        var stateOfX:Array<Bool> = places.map(function (item) {
+            return item == X;
+        });
+
+        var stateOfO:Array<Bool> = places.map(function (item) {
+            return item == O;
+        });
+
+        var win = E;
+
+        for (arr in wins) {
+            var reduceO = true;
+            var reduceX = true;
+            for (i in 0...arr.length) {
+                if(!stateOfO[i] && arr[i] && reduceO) {reduceO = false;}
+                if(!stateOfX[i] && arr[i] && reduceX) {reduceX = false;}
+            }
+            if(reduceO) {win = O; break;}
+            if(reduceX) {win = X; break;}
+        }
+
+        if (win == X) {
+            trace('x wins');
+            Main.changeState('state1');
+        } else if (win == O) {
+            trace('o wins');
+            Main.changeState('state1');
+        } else {
+            trace('no win');
+        }
+
+    } //checkBoard
 
 }

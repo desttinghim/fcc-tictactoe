@@ -43,7 +43,7 @@ class Menu extends State {
             text: 'mint',
             text_size: 14,
             options: { label: { color: new Color().rgb(0x9dca63) }},
-            onclick: function (e,c) { Main.change('state1'); }
+            onclick: function (e,c) { Main.changeState('state1'); }
         });
 
     }

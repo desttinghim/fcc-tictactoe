@@ -64,7 +64,7 @@ class Main extends luxe.Game {
 
     } //ready
 
-    public static function change(to:String) {
+    public static function changeState(to:String) {
 
         canvas.destroy_children();
         state.set(to);

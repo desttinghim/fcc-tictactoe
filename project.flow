@@ -3,7 +3,7 @@
   project : {
 
       //These first two are required
-    name : 'tic-tac-toe',
+    name : 'tictactoe',
     version : '1.0.0',
     author : 'desttinghim',
 
@@ -11,7 +11,7 @@
       //The package is important, it's used
       //for save locations, initializing mobile project files etc
     app : {
-      name : 'luxe_empty',
+      name : 'tictactoe',
       package : 'name.desttinghim.fcc-tictactoe',
     },
 
