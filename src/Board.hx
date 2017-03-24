@@ -13,6 +13,24 @@ import luxe.utils.Maths;
 
 import Piece;
 
+@:enum abstract DiagonalPosition(Float) to Float {
+    var Left = 0;
+    var Right = 180;
+}
+
+@:enum abstract StraightPosition(Int) to Int {
+    var One = 0;
+    var Two = 1;
+    var Three = 2;
+}
+
+enum Line {
+    Diagonal(a:DiagonalPosition);
+    Horizontal(a:StraightPosition);
+    Vertical(a:StraightPosition);
+    None;
+}
+
 class Board extends State {
 
     var bg : luxe.Sprite;
@@ -106,12 +124,17 @@ class Board extends State {
             currentPiece = currentPiece == X ? O : X;
         }
         var win = checkBoard();
-        if (win != E) {
-            trace('$win won');
-            Main.changeState('state1');
+        if (win.winner != E) {
+            gameOver(win);
             return;
         } else if (currentPiece != Main.piece) computerTurn();
     } //takeIndex
+
+    function gameOver(win:{winner:Piece,line:Line}) {
+        trace('${win.winner} won at ${win.line}');
+
+        Main.changeState('state1');
+    }
 
     function computerTurn() {
         if(place.indexOf(E) == -1) return; //TODO: tie handling
@@ -122,7 +145,7 @@ class Board extends State {
         takeIndex(openSpots[Math.floor(Math.random()*openSpots.length)]);
     } //computerTurn
 
-    function checkBoard():Piece {
+    function checkBoard():{winner: Piece, line: Line} {
 
         var stateOfX:Array<Bool> = place.map(function (item) {
             return item == X;
@@ -133,23 +156,31 @@ class Board extends State {
         });
 
         var win = E;
+        var line = None;
 
-        for (arr in wins) {
+        for (a in 0...wins.length) {
+            var arr = wins[a];
             var reduceO = true;
             var reduceX = true;
             for (i in 0...arr.length) {
                 if(!stateOfO[i] && arr[i] && reduceO) {reduceO = false;}
                 if(!stateOfX[i] && arr[i] && reduceX) {reduceX = false;}
             }
-            if(reduceO) {win = O; break;}
-            if(reduceX) {win = X; break;}
+            if(reduceO) {line = winLines[a]; win = O; break;}
+            if(reduceX) {line = winLines[a]; win = X; break;}
         }
 
-        return win;
+        return {winner: win, line: line};
 
     } //checkBoard
 
-    public static var wins = [
+    static var winLines = [
+    Horizontal(One), Horizontal(Two), Horizontal(Three),
+    Vertical(One), Vertical(Two), Vertical(Three),
+    Diagonal(Left), Diagonal(Right),
+    ];
+
+    static var wins = [
     [
     true, true, true,
     false, false, false,
