@@ -48,9 +48,10 @@ class Board extends State {
 
         bg.destroy();
         grid.destroy();
-        if(line != null) line.destroy();
+        line.destroy();
 
         grid = null;
+        line = null;
         buttons = null;
         images = null;
         place = null;
@@ -106,6 +107,7 @@ class Board extends State {
         ];
 
         images = [];
+        line = new luxe.Sprite({});
 
     } //onenter
 
@@ -130,10 +132,15 @@ class Board extends State {
             gameOver(win);
             return;
         } else if (currentPiece != Main.piece) computerTurn();
+
+        if (place.indexOf(E) == -1) {
+            gameOver(win);
+        }
     } //takeIndex
 
     function gameOver(win:{winner:Piece,line:Line}) {
         trace('${win.winner} won at ${win.line}');
+        var draw = true;
         var rotate = 0.0;
         var transformX = 0.0;
         var transformY = 0.0;
@@ -141,16 +148,27 @@ class Board extends State {
             case Diagonal(a): {rotate = a;}
             case Horizontal(a): {transformY = a; rotate = 0;}
             case Vertical(a): {transformX = a; rotate = 90;}
-            case None: {}
+            case None: {draw = false;}
         }
-        line = new luxe.Sprite({
-            name: 'line',
-            texture: Luxe.resources.texture('assets/line.png'),
-            pos: new luxe.Vector(240 + 160 * transformX, 340 + 160 * transformY),
-            depth: 1000,
-            rotation_z: rotate,
-        });
-        haxe.Timer.delay(function() Main.changeState('state1'), 1000);
+
+        if (draw) {
+            line = new luxe.Sprite({
+                name: 'line',
+                texture: Luxe.resources.texture('assets/line.png'),
+                pos: new luxe.Vector(240 + 160 * transformX, 340 + 160 * transformY),
+                depth: 1000,
+                rotation_z: rotate,
+            });
+        }
+
+        var can : AutoCanvas = cast canvas;
+
+        can.auto_unlisten();
+
+        haxe.Timer.delay(function() {
+            Main.changeState('state1');
+            can.auto_listen();
+        }, 1000);
     }
 
     function computerTurn() {
