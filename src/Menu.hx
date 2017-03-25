@@ -42,21 +42,46 @@ class Menu extends State {
         xbtn = new mint.Button({
             parent: canvas,
             name: 'button',
-            x: Luxe.screen.mid.x-160, y: Luxe.screen.mid.y-160, w: 128, h: 128,
-            text: 'crosses',
+            x: Luxe.screen.mid.x-160, y: Luxe.screen.mid.y-80, w: 128, h: 128,
+            text: '',
             text_size: 24,
-            options: { label: { color: new Color().rgb(0x9dca63) }},
+            options: {
+                color: new Color().rgb(0xffffff),
+                color_hover: new Color().rgb(0xf0f0f0),
+                color_down: new Color().rgb(0xaaaaaa),
+                label: { color: new Color().rgb(0x000000), },
+            },
             onclick: function (e,c) { Main.piece = X; Main.changeState('state1'); }
+        });
+
+        new mint.Image({
+            parent: xbtn,
+            name: 'cross',
+            w: 128, h: 128,
+            path: 'assets/cross.png',
         });
 
         obtn = new mint.Button({
             parent: canvas,
             name: 'button',
-            x: Luxe.screen.mid.x+32, y: Luxe.screen.mid.y-160, w: 128, h: 128,
-            text: 'knots',
+            x: Luxe.screen.mid.x+32, y: Luxe.screen.mid.y-80, w: 128, h: 128,
+            text: '',
             text_size: 24,
-            options: { label: { color: new Color().rgb(0x9dca63) }},
+            options: {
+                color: new Color().rgb(0xffffff),
+                color_hover: new Color().rgb(0xf0f0f0),
+                color_down: new Color().rgb(0xaaaaaa),
+                label: { color: new Color().rgb(0x000000), },
+            },
             onclick: function (e,c) { Main.piece = O; Main.changeState('state1'); }
+        });
+
+
+        new mint.Image({
+            parent: obtn,
+            name: 'knot',
+            w: 128, h: 128,
+            path: 'assets/knot.png',
         });
 
     }
