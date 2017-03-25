@@ -14,8 +14,8 @@ import luxe.utils.Maths;
 import Piece;
 
 @:enum abstract DiagonalPosition(Float) to Float {
-    var Left = 0;
-    var Right = 180;
+    var Left = 45;
+    var Right = 135;
 }
 
 @:enum abstract StraightPosition(Int) to Int {
@@ -38,6 +38,7 @@ class Board extends State {
     var canvas : mint.Canvas;
     var buttons : Array<mint.Button>;
     var images : Array<mint.Image>;
+    var line : luxe.Sprite;
 
     var place : Array<Piece>;
     var currentPiece : Piece;
@@ -47,6 +48,7 @@ class Board extends State {
 
         bg.destroy();
         grid.destroy();
+        line.destroy();
 
         grid = null;
         buttons = null;
@@ -132,8 +134,22 @@ class Board extends State {
 
     function gameOver(win:{winner:Piece,line:Line}) {
         trace('${win.winner} won at ${win.line}');
-
-        Main.changeState('state1');
+        var rotate = 0.0;
+        var transformX = 0.0;
+        var transformY = 0.0;
+        switch(win.line) {
+            case Diagonal(a): {rotate = a;}
+            case Horizontal(a): {transformY = a; rotate = 0;}
+            case Vertical(a): {transformX = a; rotate = 90;}
+            case None: {}
+        }
+        line = new luxe.Sprite({
+            name: 'line',
+            texture: Luxe.resources.texture('assets/line.png'),
+            pos: new luxe.Vector(40 + 160 * transformX, 40 + 160 * transformY, 10),
+            rotation_z: rotate, centered: false,
+        });
+        haxe.Timer.delay(function() Main.changeState('state1'), 1000);
     }
 
     function computerTurn() {

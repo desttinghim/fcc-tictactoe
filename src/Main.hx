@@ -35,6 +35,7 @@ class Main extends luxe.Game {
         config.preload.textures.push({ id: 'assets/grid.png' });
         config.preload.textures.push({ id: 'assets/cross.png' });
         config.preload.textures.push({ id: 'assets/knot.png' });
+        config.preload.textures.push({ id: 'assets/line.png' });
 
         return config;
 
