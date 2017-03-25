@@ -38,7 +38,6 @@ class Board extends State {
     var canvas : mint.Canvas;
     var buttons : Array<mint.Button>;
     var images : Array<mint.Image>;
-    var line : luxe.Sprite;
 
     var place : Array<Piece>;
     var currentPiece : Piece;
@@ -48,7 +47,6 @@ class Board extends State {
 
         bg.destroy();
         grid.destroy();
-        line.destroy();
 
         grid = null;
         buttons = null;
@@ -117,7 +115,6 @@ class Board extends State {
     function takeIndex(i) {
         if (place[i] == E) {
             place[i] = currentPiece;
-            // buttons[i].label.text = currentPiece;
             images.push(new mint.Image({
                 parent: canvas,
                 x: buttons[i].x, y: buttons[i].y , w: 128, h: 128,
@@ -143,11 +140,11 @@ class Board extends State {
             case Vertical(a): {transformX = a; rotate = 90;}
             case None: {}
         }
-        line = new luxe.Sprite({
-            name: 'line',
-            texture: Luxe.resources.texture('assets/line.png'),
-            pos: new luxe.Vector(40 + 160 * transformX, 40 + 160 * transformY, 10),
-            rotation_z: rotate, centered: false,
+        new mint.Image({
+            parent: canvas, name: 'line',
+            x: 160 * transformX, y: 80 + 160 * transformY,
+            w: 480, h: 128,
+            path: 'assets/line.png',
         });
         haxe.Timer.delay(function() Main.changeState('state1'), 1000);
     }
