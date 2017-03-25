@@ -19,9 +19,9 @@ import Piece;
 }
 
 @:enum abstract StraightPosition(Int) to Int {
-    var One = 0;
-    var Two = 1;
-    var Three = 2;
+    var One = -1;
+    var Two = 0;
+    var Three = 1;
 }
 
 enum Line {
@@ -38,6 +38,7 @@ class Board extends State {
     var canvas : mint.Canvas;
     var buttons : Array<mint.Button>;
     var images : Array<mint.Image>;
+    var line : luxe.Sprite;
 
     var place : Array<Piece>;
     var currentPiece : Piece;
@@ -47,6 +48,7 @@ class Board extends State {
 
         bg.destroy();
         grid.destroy();
+        if(line != null) line.destroy();
 
         grid = null;
         buttons = null;
@@ -115,6 +117,7 @@ class Board extends State {
     function takeIndex(i) {
         if (place[i] == E) {
             place[i] = currentPiece;
+            // buttons[i].label.text = currentPiece;
             images.push(new mint.Image({
                 parent: canvas,
                 x: buttons[i].x, y: buttons[i].y , w: 128, h: 128,
@@ -140,11 +143,12 @@ class Board extends State {
             case Vertical(a): {transformX = a; rotate = 90;}
             case None: {}
         }
-        new mint.Image({
-            parent: canvas, name: 'line',
-            x: 160 * transformX, y: 80 + 160 * transformY,
-            w: 480, h: 128,
-            path: 'assets/line.png',
+        line = new luxe.Sprite({
+            name: 'line',
+            texture: Luxe.resources.texture('assets/line.png'),
+            pos: new luxe.Vector(240 + 160 * transformX, 340 + 160 * transformY),
+            depth: 1000,
+            rotation_z: rotate,
         });
         haxe.Timer.delay(function() Main.changeState('state1'), 1000);
     }
