@@ -92,7 +92,9 @@ class Board extends State {
                 new mint.Button({
                     parent: canvas,
                     name: 'button$a$i',
-                    x: a * 160 + 16, y: i * 160 + 16 + 80, w: 128, h: 128,
+                    x: (grid.pos.x - 240) + a * 160 + 16,
+                    y: (grid.pos.y - 240) + i * 160 + 16,
+                    w: 128, h: 128,
                     text: '',
                     options: {
                         color: new Color().rgb(0xffffff),
@@ -155,7 +157,7 @@ class Board extends State {
             line = new luxe.Sprite({
                 name: 'line',
                 texture: Luxe.resources.texture('assets/line.png'),
-                pos: new luxe.Vector(240 + 160 * transformX, 340 + 160 * transformY),
+                pos: new luxe.Vector((grid.pos.x) + 160 * transformX, (grid.pos.y) + 160 * transformY),
                 depth: 1000,
                 rotation_z: rotate,
             });

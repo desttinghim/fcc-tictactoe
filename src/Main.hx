@@ -27,10 +27,10 @@ class Main extends luxe.Game {
 
     override function config(config:GameConfig) {
 
-        config.window.title = 'luxe game';
+        config.window.title = 'tic tac toe';
         config.window.width = 480;
         config.window.height = 640;
-        config.window.fullscreen = false;
+        config.window.fullscreen = true;
 
         config.preload.textures.push({ id: 'assets/grid.png' });
         config.preload.textures.push({ id: 'assets/cross.png' });
